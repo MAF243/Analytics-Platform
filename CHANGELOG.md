@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/MAF243/Analytics-Platform/compare/v1.7.0...v1.8.0) (2026-07-03)
+
+
+### Features
+
+* add environment-based application configuration using Pydantic Settings ([5907d18](https://github.com/MAF243/Analytics-Platform/commit/5907d18cb66ddf8a4371129b1d3e6cbb2605f03a))
+
 # [1.7.0](https://github.com/MAF243/Analytics-Platform/compare/v1.6.0...v1.7.0) (2026-07-03)
 
 
