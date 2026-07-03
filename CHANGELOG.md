@@ -1,13 +1,12 @@
 # [1.2.0](https://github.com/MAF243/Analytics-Platform/compare/v1.1.0...v1.2.0) (2026-07-03)
 
-
-### Features
+## Features
 
 * add GitHub Actions workflow to deploy backend to Hugging Face Spaces ([455b514](https://github.com/MAF243/Analytics-Platform/commit/455b5143bc18f54672f2d6d6407462136e521c4b))
 
-# [1.1.0](https://github.com/MAF243/Analytics-Platform/compare/v1.0.1...v1.1.0) (2026-07-03)
+## [1.1.0](https://github.com/MAF243/Analytics-Platform/compare/v1.0.1...v1.1.0) (2026-07-03)
 
-## Features
+### Features
 
 * implement Hugging Face deployment workflow and finalize project metadata and ownership documentation ([182e1e4](https://github.com/MAF243/Analytics-Platform/commit/182e1e44c607df7c9e344e776489e5e8e825655b))
 
