@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/MAF243/Analytics-Platform/compare/v1.4.0...v1.5.0) (2026-07-03)
+
+
+### Features
+
+* add GitHub Actions CI pipeline for linting, testing, security auditing, and automated releases ([a038951](https://github.com/MAF243/Analytics-Platform/commit/a038951327954029afe46351bb5b62438285c9a4))
+
 # [1.4.0](https://github.com/MAF243/Analytics-Platform/compare/v1.3.0...v1.4.0) (2026-07-03)
 
 
