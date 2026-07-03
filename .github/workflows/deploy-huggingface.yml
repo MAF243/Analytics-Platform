@@ -209,16 +209,16 @@ jobs:
           echo
 
           echo "Hugging Face User : ${{ secrets.HF_USERNAME }}"
-          echo "Space             : ${{ secrets.HF_SPACE }}"
+          echo "Space             : ${{ secrets.HF_SPACE_NAME }}"
           echo "Commit            : ${GITHUB_SHA}"
           echo "Timestamp         : $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 
           echo
           echo "Space URL:"
-          echo "https://${{ secrets.HF_USERNAME }}-${{ secrets.HF_SPACE }}.hf.space"
+          echo "https://${{ secrets.HF_USERNAME }}-${{ secrets.HF_SPACE_NAME }}.hf.space"
 
           echo
           echo "Repository:"
-          echo "https://huggingface.co/spaces/${{ secrets.HF_USERNAME }}/${{ secrets.HF_SPACE }}"
+          echo "https://huggingface.co/spaces/${{ secrets.HF_USERNAME }}/${{ secrets.HF_SPACE_NAME }}"
 
           echo "::endgroup::"

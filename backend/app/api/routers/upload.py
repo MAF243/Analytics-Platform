@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, File, Request, UploadFile
+from loguru import logger
 
 from backend.app.api.dependencies import (
     get_processing_time,
@@ -14,7 +15,70 @@ from backend.app.core.responses import ApiResponse
 router = APIRouter(tags=["Dataset"])
 
 
-@router.post("/upload", response_model=ApiResponse[UploadResponse])
+@router.post("/upload-test")
+async def upload_test(request: Request):
+    logger.info(
+        "UPLOAD ROUTER REACHED",
+        extra={
+            "path": request.url.path,
+            "method": request.method,
+            "content_type": request.headers.get("content-type"),
+            "content_length": request.headers.get("content-length")
+        }
+    )
+    return {
+        "ok": True,
+        "message": "router reached"
+    }
+
+
+@router.post("/upload-debug")
+async def upload_debug(request: Request):
+    logger.info(
+        "UPLOAD ROUTER REACHED",
+        extra={
+            "path": request.url.path,
+            "method": request.method,
+            "content_type": request.headers.get("content-type"),
+            "content_length": request.headers.get("content-length")
+        }
+    )
+    body = await request.body()
+    logger.info(
+        "UPLOAD DEBUG",
+        extra={
+            "content_length": request.headers.get("content-length"),
+            "content_type": request.headers.get("content-type"),
+            "first_100_bytes": body[:100],
+        }
+    )
+    return {"received": True}
+
+
+@router.post("/body-test")
+async def body_test(request: Request):
+    body = await request.body()
+    logger.info(len(body))
+    logger.info(request.headers.get("content-type"))
+    logger.info(request.headers.get("content-length"))
+    return {"received": len(body)}
+
+
+@router.post("/multipart-test")
+async def multipart_test(request: Request):
+    form = await request.form()
+    logger.info(form.keys())
+    return {"keys": list(form.keys())}
+
+
+async def pre_upload_logging(request: Request):
+    logger.info("UPLOAD ROUTER ENTER")
+    logger.info(request.headers)
+    logger.info(request.headers.get("content-length"))
+    logger.info(request.headers.get("content-type"))
+
+
+@router.post("/upload", response_model=ApiResponse[UploadResponse], dependencies=[Depends(pre_upload_logging)])
 @limiter.limit("10/minute")
 async def upload_dataset(
     request: Request,
@@ -24,6 +88,15 @@ async def upload_dataset(
     processing_time: float = Depends(get_processing_time),
 ) -> ApiResponse[UploadResponse]:
     """Uploads a CSV dataset for analysis."""
+    logger.info(
+        "UPLOAD ROUTER REACHED",
+        extra={
+            "path": request.url.path,
+            "method": request.method,
+            "content_type": request.headers.get("content-type"),
+            "content_length": request.headers.get("content-length")
+        }
+    )
 
     # Process upload via use case (synchronously in memory for MVP constraints)
     response_dto = use_case.execute(

@@ -55,9 +55,14 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             path=request.url.path,
         )
 
-        logger_context.info("Request started")
+        logger_context.info("LOGGING MIDDLEWARE ENTER")
+        logger_context.info(request.method)
+        logger_context.info(request.url.path)
+        logger_context.info(request.headers.get("content-type"))
+        logger_context.info(request.headers.get("content-length"))
         try:
             response = await call_next(request)
+            logger_context.info("LOGGING MIDDLEWARE EXIT")
 
             process_time = getattr(request.state, "processing_time", 0.0)
             logger_context.info(
