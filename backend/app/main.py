@@ -28,7 +28,7 @@ from backend.app.core.responses import ApiResponse, ErrorDetails
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Lifespan event handler for the FastAPI application."""
     setup_logging()
-    
+
     sentry_dsn = os.environ.get("SENTRY_DSN")
     if sentry_dsn:
         sentry_sdk.init(
@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
             release=settings.version,
         )
         logger.info("Sentry initialized.")
-        
+
     yield
     # Cleanup tasks can go here
 
@@ -52,7 +52,7 @@ def create_app() -> FastAPI:
         docs_url=f"{settings.api_v1_prefix}/docs",
         openapi_url=f"{settings.api_v1_prefix}/openapi.json",
     )
-    
+
     app.state.limiter = limiter
     app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 

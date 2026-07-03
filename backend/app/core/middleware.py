@@ -15,11 +15,11 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
     ) -> Response:
         request_id = str(uuid.uuid4())
         request.state.request_id = request_id
-        
+
         # Extract or generate Correlation ID
         correlation_id = request.headers.get("X-Correlation-ID", request_id)
         request.state.correlation_id = correlation_id
-        
+
         response = await call_next(request)
         response.headers["X-Request-ID"] = request_id
         response.headers["X-Correlation-ID"] = correlation_id
@@ -70,14 +70,15 @@ class LoggingMiddleware(BaseHTTPMiddleware):
             logger_context.exception(f"Request failed with unexpected error: {str(e)}")
             raise
 
+
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     """Injects strict security headers including CSP."""
-    
+
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         response = await call_next(request)
-        
+
         # CSP Configuration (can be overridden by env vars in a real setup)
         csp = (
             "default-src 'self'; "
@@ -89,7 +90,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "frame-ancestors 'none'; "
             "base-uri 'self'"
         )
-        
+
         response.headers["Content-Security-Policy"] = csp
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -97,5 +98,5 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Strict-Transport-Security"] = (
             "max-age=31536000; includeSubDomains"
         )
-        
+
         return response

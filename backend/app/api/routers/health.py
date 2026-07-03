@@ -23,7 +23,7 @@ async def health_check(
     """Basic health check endpoint with enterprise metrics."""
     memory = psutil.virtual_memory()
     uptime = time.time() - APP_START_TIME
-    
+
     return ApiResponse(
         success=True,
         message="System is healthy",
@@ -33,11 +33,11 @@ async def health_check(
             "memory": {
                 "total_mb": round(memory.total / (1024 * 1024), 2),
                 "available_mb": round(memory.available / (1024 * 1024), 2),
-                "percent": memory.percent
+                "percent": memory.percent,
             },
             "dependencies": {
                 "storage": "OK",  # In a real app, ping the DB/Storage here
-            }
+            },
         },
         request_id=request_id,
         processing_time=processing_time,

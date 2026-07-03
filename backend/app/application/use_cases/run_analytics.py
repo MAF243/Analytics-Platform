@@ -153,7 +153,7 @@ class RunAnalyticsUseCase:
             context = self.dashboard_builder.build(context)
 
         except Exception as e:
-            # We would normally transition state to FAILED and save it, 
+            # We would normally transition state to FAILED and save it,
             # but we can just raise for now
             raise ApplicationException(f"Analytics Pipeline Failed: {str(e)}")
 
