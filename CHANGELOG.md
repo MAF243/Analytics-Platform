@@ -1,11 +1,10 @@
 # [1.1.0](https://github.com/MAF243/Analytics-Platform/compare/v1.0.1...v1.1.0) (2026-07-03)
 
-
-### Features
+## Features
 
 * implement Hugging Face deployment workflow and finalize project metadata and ownership documentation ([182e1e4](https://github.com/MAF243/Analytics-Platform/commit/182e1e44c607df7c9e344e776489e5e8e825655b))
 
-# [1.0.1](https://github.com/MAF243/Analytics-Platform/compare/v1.0.0...v1.0.1) (2026-07-03)
+## [1.0.1](https://github.com/MAF243/Analytics-Platform/compare/v1.0.0...v1.0.1) (2026-07-03)
 
 ## Bug Fixes
 
@@ -13,7 +12,7 @@
 
 ## 1.0.0 (2026-07-03)
 
-## Features
+## New Features
 
 * implement analytics pipeline use case, request logging middleware, and CI/CD infrastructure ([bf4d265](https://github.com/MAF243/Analytics-Platform/commit/bf4d265b923a1f6c43447fe250b4a2fe7a6ef56b))
 * implement backend API foundation, initialize frontend project structure, and establish documentation and compliance standards. ([37f5d7d](https://github.com/MAF243/Analytics-Platform/commit/37f5d7d1c4789e855c063322131e45d6579a1bd1))
