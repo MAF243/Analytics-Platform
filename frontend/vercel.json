@@ -1,10 +1,6 @@
 {
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "https://maf243-analytics-platform.hf.space/api/$1"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
