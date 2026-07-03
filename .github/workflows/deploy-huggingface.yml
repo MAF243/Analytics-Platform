@@ -169,7 +169,7 @@ jobs:
       - name: Push to Hugging Face
         env:
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
-          HF_SPACE: ${{ secrets.HF_SPACE }}
+          HF_SPACE: ${{ secrets.HF_SPACE_NAME }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           set -euo pipefail
