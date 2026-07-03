@@ -1,7 +1,7 @@
 import logging
 import os
 import time
-import traceback
+import types
 import uuid
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
@@ -13,7 +13,7 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from starlette.types import ASGIApp, Receive, Scope, Send
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from backend.app.api.routers import analytics, health, upload
 from backend.app.core.config import settings
@@ -41,7 +41,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
                 level = logger.level(record.levelname).name
             except ValueError:
                 level = str(record.levelno)
-            frame, depth = logging.currentframe(), 2
+            frame: types.FrameType | None = logging.currentframe()
+            depth = 2
             while frame and frame.f_code.co_filename == logging.__file__:
                 frame = frame.f_back
                 depth += 1
@@ -107,7 +108,7 @@ def create_app() -> FastAPI:
     app.include_router(analytics.router, prefix=settings.api_v1_prefix)
 
     @app.get(f"{settings.api_v1_prefix}/debug/ping")
-    async def debug_ping(request: Request):
+    async def debug_ping(request: Request) -> dict[str, Any]:
         return {
             "ok": True,
             "method": request.method,
@@ -116,7 +117,7 @@ def create_app() -> FastAPI:
         }
 
     @app.post(f"{settings.api_v1_prefix}/debug/raw")
-    async def debug_raw(request: Request):
+    async def debug_raw(request: Request) -> dict[str, Any]:
         logger.info("RAW BODY RECEIVED")
         body = await request.body()
         logger.info(len(body))
@@ -167,10 +168,10 @@ def _build_error_response(
 
 
 class RawASGILoggingMiddleware:
-    def __init__(self, app: ASGIApp):
+    def __init__(self, app: ASGIApp) -> None:
         self.app = app
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send):
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
 
@@ -179,42 +180,73 @@ class RawASGILoggingMiddleware:
         path = scope.get("path")
         client = scope.get("client")
 
+        sensitive_headers = {
+            "authorization",
+            "cookie",
+            "bearer-token",
+            "api-key",
+            "x-api-key",
+            "proxy-authorization",
+        }
+
         headers = {}
+        content_length = None
+        content_type = None
+
         for k, v in scope.get("headers", []):
             try:
-                headers[k.decode("utf-8")] = v.decode("utf-8")
+                key = k.decode("utf-8").lower()
+                val = v.decode("utf-8")
+
+                if key in sensitive_headers:
+                    headers[key] = "********"
+                else:
+                    headers[key] = val
+
+                if key == "content-length":
+                    content_length = val
+                if key == "content-type":
+                    content_type = val
             except Exception:
                 pass
 
+        bound_logger = logger.bind(
+            request_id=request_id,
+            method=method,
+            path=path,
+            client=client,
+        )
+
         start_time = time.time()
-        logger.info(
-            f"RAW ASGI REQUEST: req_id={request_id} method={method} path={path} "
-            f"client={client} headers={headers} timestamp={start_time}"
+        bound_logger.info(
+            f"RAW ASGI REQUEST: content_length={content_length} "
+            f"content_type={content_type}",
+            headers=headers,
         )
 
         status_code = 500
 
-        async def custom_send(message: dict[str, Any]):
+        async def custom_send(message: Message) -> None:
             nonlocal status_code
             if message["type"] == "http.response.start":
                 status_code = message.get("status", 500)
+                msg_headers = list(message.get("headers", []))
+                msg_headers.append((b"x-request-id", request_id.encode("utf-8")))
+                message["headers"] = msg_headers
             await send(message)
 
         try:
             await self.app(scope, receive, custom_send)
-        except Exception as e:
-            logger.error(
-                f"RAW ASGI EXCEPTION: req_id={request_id} error={str(e)}\n"
-                f"{traceback.format_exc()}"
-            )
+        except Exception:
+            bound_logger.exception("RAW ASGI EXCEPTION")
             raise
         finally:
             elapsed_time = time.time() - start_time
-            logger.info(
-                f"RAW ASGI RESPONSE: req_id={request_id} status={status_code} "
+            bound_logger.info(
+                f"RAW ASGI RESPONSE: status={status_code} "
                 f"elapsed_time={elapsed_time:.4f}s"
             )
 
 
-app = create_app()
-app = RawASGILoggingMiddleware(app)
+fastapi_app = create_app()
+app: ASGIApp = RawASGILoggingMiddleware(fastapi_app)
