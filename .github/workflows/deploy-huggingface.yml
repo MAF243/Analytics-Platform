@@ -1,0 +1,228 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+ group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  deploy-to-hf-space:
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 15
+
+    environment:
+      name: production
+
+    env:
+      DEPLOY_DIR: deploy
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Secrets and Requirements
+        env:
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          echo "::group::Verifying secrets and required files"
+
+          [[ -n "${HF_USERNAME:-}" ]] || { echo "HF_USERNAME missing"; exit 1; }
+          [[ -n "${HF_SPACE:-}" ]] || { echo "HF_SPACE missing"; exit 1; }
+          [[ -n "${HF_TOKEN:-}" ]] || { echo "HF_TOKEN missing"; exit 1; }
+
+          test -f docker/backend.Dockerfile
+          test -d backend
+          test -f pyproject.toml
+
+          echo "All prerequisite checks passed."
+
+          echo "::endgroup::"
+
+      - name: Prepare deployment directory
+        run: |
+          set -euo pipefail
+
+          echo "::group::Preparing deployment package"
+
+          rm -rf "$DEPLOY_DIR"
+
+          mkdir -p "$DEPLOY_DIR"
+
+          cp -r backend "$DEPLOY_DIR/"
+          cp pyproject.toml "$DEPLOY_DIR/"
+
+          [[ -f poetry.lock ]] && cp poetry.lock "$DEPLOY_DIR/"
+          [[ -f .env.example ]] && cp .env.example "$DEPLOY_DIR/"
+          [[ -f backend/.env.example ]] && cp backend/.env.example "$DEPLOY_DIR/backend/"
+
+          cp docker/backend.Dockerfile "$DEPLOY_DIR/Dockerfile"
+
+          echo "Cleaning development artifacts..."
+
+          find "$DEPLOY_DIR" \
+            -type d \
+            \( \
+              -name tests \
+              -o -name __pycache__ \
+              -o -name .pytest_cache \
+              -o -name .mypy_cache \
+              -o -name .ruff_cache \
+              -o -name coverage \
+              -o -name htmlcov \
+            \) \
+            -exec rm -rf {} + || true
+
+          find "$DEPLOY_DIR" \
+            -type f \
+            \( \
+              -name ".coverage" \
+              -o -name "*.pyc" \
+              -o -name "*.pyo" \
+              -o -name "*.log" \
+              -o -name ".gitkeep" \
+            \) \
+            -delete || true
+
+          echo "::endgroup::"
+
+      - name: Generate Hugging Face README
+        run: |
+          set -euo pipefail
+
+          echo "::group::Generating README"
+
+          cat <<EOF > "$DEPLOY_DIR/README.md"
+          ---
+          title: Enterprise Analytics Platform
+          emoji: 📊
+          colorFrom: blue
+          colorTo: indigo
+          sdk: docker
+          license: mit
+          ---
+
+          # Enterprise Analytics Platform Backend
+
+          Production FastAPI backend.
+
+          Automatically deployed from GitHub Actions.
+
+          ## Technology
+
+          - FastAPI
+          - Docker
+          - Pandas
+          - Scikit-Learn
+
+          Source:
+
+          https://github.com/MAF243/analytics-platform
+          EOF
+
+          echo "::endgroup::"
+
+      - name: Validate deployment package
+        run: |
+          set -euo pipefail
+
+          echo "::group::Validating deployment package"
+
+          test -f "$DEPLOY_DIR/Dockerfile"
+          test -f "$DEPLOY_DIR/pyproject.toml"
+          test -d "$DEPLOY_DIR/backend"
+          test -f "$DEPLOY_DIR/README.md"
+
+          echo "Deployment package validation passed."
+
+          echo "Package size:"
+          du -sh "$DEPLOY_DIR"
+
+          echo "Contents:"
+
+          if command -v tree >/dev/null 2>&1; then
+            tree -L 2 "$DEPLOY_DIR"
+          else
+            find "$DEPLOY_DIR" -maxdepth 2
+          fi
+
+          echo "::endgroup::"
+
+      - name: Push to Hugging Face
+        env:
+          HF_USERNAME: ${{ secrets.HF_USERNAME }}
+          HF_SPACE: ${{ secrets.HF_SPACE }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          cd "$DEPLOY_DIR"
+
+          echo "::group::Initializing Git repository"
+
+          git init -b main
+
+          git config user.name "GitHub Actions"
+
+          git config user.email "github-actions@github.com"
+
+          git remote add huggingface \
+            "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/spaces/${HF_USERNAME}/${HF_SPACE}"
+
+          git add .
+
+          echo "Git status:"
+          git status --short
+
+          git commit \
+            -m "ci(deploy): sync Hugging Face Space (${GITHUB_SHA})" \
+            || echo "Nothing to commit."
+
+          git push --force huggingface main
+
+          echo "::endgroup::"
+
+      - name: Deployment Summary
+        run: |
+          set -euo pipefail
+
+          echo "::group::Deployment Summary"
+
+          echo "Deployment completed successfully."
+
+          echo ""
+
+          echo "Hugging Face User : ${{ secrets.HF_USERNAME }}"
+          echo "Space             : ${{ secrets.HF_SPACE }}"
+          echo "Commit            : ${GITHUB_SHA}"
+          echo "Timestamp         : $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+
+          echo ""
+
+          echo "Space URL:"
+          echo "https://${{ secrets.HF_USERNAME }}-${{ secrets.HF_SPACE }}.hf.space"
+
+          echo ""
+
+          echo "Repository:"
+          echo "https://huggingface.co/spaces/${{ secrets.HF_USERNAME }}/${{ secrets.HF_SPACE }}"
+
+          echo "::endgroup::"

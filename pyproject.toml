@@ -3,7 +3,7 @@ name = "enterprise-analytics-platform"
 version = "1.0.0"
 description = "Enterprise Analytics Platform - Phase 2 Backend Foundation"
 # TODO: Replace YOUR_NAME and YOUR_EMAIL with your actual name and email
-authors = ["YOUR_NAME <YOUR_EMAIL>"]
+authors = ["MAFU <mafudev@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.12"

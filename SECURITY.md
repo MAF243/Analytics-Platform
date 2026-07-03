@@ -11,7 +11,7 @@ Currently, only the latest major version (`v1.x.x`) is supported with security u
 
 ## Reporting a Vulnerability
 
-We take the security of our platform seriously. If you discover a security vulnerability within this project, please send an e-mail to the maintainers at **@YOUR_SECURITY_EMAIL** rather than opening a public issue.
+We take the security of our platform seriously. If you discover a security vulnerability within this project, please send an e-mail to the maintainers at **mafudev@gmail.com** rather than opening a public issue.
 <!-- TODO: Replace @YOUR_SECURITY_EMAIL with your actual security email address before publishing -->
 
 All security vulnerabilities will be promptly addressed.
