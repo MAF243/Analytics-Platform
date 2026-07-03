@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --write .",
+    "type-check": "vue-tsc -b",
     "test": "vitest run"
   },
   "dependencies": {

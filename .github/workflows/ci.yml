@@ -76,7 +76,7 @@ jobs:
       run: npm run lint
       
     - name: Typecheck
-      run: npm run type-check || vue-tsc -b
+      run: npm run type-check
       
     - name: Unit Tests & Coverage
       run: npx vitest run --coverage
