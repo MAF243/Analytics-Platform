@@ -49,7 +49,9 @@ lint.ignore = []
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+explicit_package_bases = true
 
 [tool.pytest.ini_options]
 addopts = "-v --cov=backend/app --cov-report=term-missing"
 testpaths = ["backend/tests"]
+pythonpath = ["."]

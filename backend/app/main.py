@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         sentry_sdk.init(
             dsn=sentry_dsn,
             traces_sample_rate=1.0,
-            environment=settings.environment,
+            environment=settings.env,
             release=settings.version,
         )
         logger.info("Sentry initialized.")
@@ -54,7 +54,7 @@ def create_app() -> FastAPI:
     )
 
     app.state.limiter = limiter
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)  # type: ignore
 
     # Middlewares
     app.add_middleware(
