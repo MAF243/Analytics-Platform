@@ -11,7 +11,7 @@ export default defineConfig({
   reporter: [['html', { open: 'never' }], ['junit', { outputFile: 'results.xml' }]],
   use: {
     actionTimeout: 0,
-    baseURL: 'http://localhost:80',
+    baseURL: 'http://localhost:5173',
     trace: 'on',
     video: 'on',
     screenshot: 'on',
@@ -34,4 +34,10 @@ export default defineConfig({
       use: { ...devices['Pixel 5'] },
     },
   ],
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:5173',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });
