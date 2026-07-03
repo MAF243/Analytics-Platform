@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/MAF243/Analytics-Platform/compare/v1.3.0...v1.4.0) (2026-07-03)
+
+
+### Features
+
+* add GitHub Actions workflow to automate deployment to Hugging Face Spaces ([c464c17](https://github.com/MAF243/Analytics-Platform/commit/c464c170f0ad999e61eae53117859691df4d5d7e))
+
 # [1.3.0](https://github.com/MAF243/Analytics-Platform/compare/v1.2.0...v1.3.0) (2026-07-03)
 
 ### Features
