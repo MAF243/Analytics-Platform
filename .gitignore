@@ -62,3 +62,7 @@ openapi*.json
 audit_result.txt
 lighthouse*.html
 lighthouse*.json
+
+# Documentation and planning
+docs/testing.md
+implementation_plan.md
