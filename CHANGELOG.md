@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/MAF243/Analytics-Platform/compare/v1.5.0...v1.6.0) (2026-07-03)
+
+
+### Features
+
+* initialize frontend project with configuration, deployment rules, and dependencies ([2356307](https://github.com/MAF243/Analytics-Platform/commit/2356307e511d1de4182602a8bf621c4d2ce35906))
+
 # [1.5.0](https://github.com/MAF243/Analytics-Platform/compare/v1.4.0...v1.5.0) (2026-07-03)
 
 
