@@ -23,13 +23,10 @@ async def upload_test(request: Request):
             "path": request.url.path,
             "method": request.method,
             "content_type": request.headers.get("content-type"),
-            "content_length": request.headers.get("content-length")
-        }
+            "content_length": request.headers.get("content-length"),
+        },
     )
-    return {
-        "ok": True,
-        "message": "router reached"
-    }
+    return {"ok": True, "message": "router reached"}
 
 
 @router.post("/upload-debug")
@@ -40,8 +37,8 @@ async def upload_debug(request: Request):
             "path": request.url.path,
             "method": request.method,
             "content_type": request.headers.get("content-type"),
-            "content_length": request.headers.get("content-length")
-        }
+            "content_length": request.headers.get("content-length"),
+        },
     )
     body = await request.body()
     logger.info(
@@ -50,7 +47,7 @@ async def upload_debug(request: Request):
             "content_length": request.headers.get("content-length"),
             "content_type": request.headers.get("content-type"),
             "first_100_bytes": body[:100],
-        }
+        },
     )
     return {"received": True}
 
@@ -78,7 +75,11 @@ async def pre_upload_logging(request: Request):
     logger.info(request.headers.get("content-type"))
 
 
-@router.post("/upload", response_model=ApiResponse[UploadResponse], dependencies=[Depends(pre_upload_logging)])
+@router.post(
+    "/upload",
+    response_model=ApiResponse[UploadResponse],
+    dependencies=[Depends(pre_upload_logging)],
+)
 @limiter.limit("10/minute")
 async def upload_dataset(
     request: Request,
@@ -94,8 +95,8 @@ async def upload_dataset(
             "path": request.url.path,
             "method": request.method,
             "content_type": request.headers.get("content-type"),
-            "content_length": request.headers.get("content-length")
-        }
+            "content_length": request.headers.get("content-length"),
+        },
     )
 
     # Process upload via use case (synchronously in memory for MVP constraints)
