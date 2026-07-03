@@ -12,15 +12,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-COPY pyproject.toml ./
+COPY pyproject.toml poetry.lock ./
 
 # Create a virtualenv
 RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH="/opt/venv/bin:$PATH" \
+    VIRTUAL_ENV="/opt/venv"
 
-# Install dependencies using pip (based on pyproject.toml dependencies)
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir fastapi "uvicorn[standard]" pydantic pydantic-settings loguru python-multipart pandas numpy scikit-learn scipy kneed sentry-sdk slowapi psutil
+# Install dependencies using Poetry
+RUN pip install --no-cache-dir poetry==1.8.3 && \
+    poetry install --only main --no-root
 
 # Stage 2: Production runtime
 FROM python:3.12-slim
