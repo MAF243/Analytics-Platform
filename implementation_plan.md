@@ -174,7 +174,7 @@ RESTful principles applied. Every endpoint returns a standardized envelope wrapp
 
 ## 10. Database/Storage Design
 - **Storage Medium:** Local ephemeral disk (or mapped Docker volume). No SQL/NoSQL database for the MVP.
-- **Structure:** 
+- **Structure:**
   - `/data/{uuid}/raw.csv`
   - `/data/{uuid}/cleaned.csv`
   - `/data/{uuid}/metadata.json`

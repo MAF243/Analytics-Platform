@@ -1,9 +1,8 @@
+import time
 from typing import Any, Dict
 
-from fastapi import APIRouter, Depends, Request
-
-import time
 import psutil
+from fastapi import APIRouter, Depends, Request
 
 from backend.app.api.dependencies import get_processing_time, get_request_id
 from backend.app.core.config import settings

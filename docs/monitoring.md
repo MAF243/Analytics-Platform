@@ -31,7 +31,7 @@ graph TD
 ## Frontend Telemetry
 The frontend abstracts telemetry via `ITelemetryProvider`.
 - **Development:** `ConsoleTelemetryProvider` logs events to the browser console.
-- **Production:** `SentryTelemetryProvider` automatically handles unhandled rejections, Vue errors, and captures custom metrics like `upload_duration_ms` and `dashboard_render_duration_ms`. 
+- **Production:** `SentryTelemetryProvider` automatically handles unhandled rejections, Vue errors, and captures custom metrics like `upload_duration_ms` and `dashboard_render_duration_ms`.
 - **Graceful Degradation:** If `VITE_SENTRY_DSN` is not provided, the app continues to function seamlessly, falling back or bypassing Sentry.
 
 ## Backend Telemetry

@@ -1,14 +1,14 @@
+import os
 from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
+import sentry_sdk
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from loguru import logger
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-import sentry_sdk
-import os
-from loguru import logger
 
 from backend.app.api.routers import analytics, health, upload
 from backend.app.core.config import settings
@@ -20,10 +20,9 @@ from backend.app.core.middleware import (
     RequestIDMiddleware,
     SecurityHeadersMiddleware,
 )
+from backend.app.core.rate_limit import limiter
 from backend.app.core.responses import ApiResponse, ErrorDetails
 
-
-from backend.app.core.rate_limit import limiter
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:

@@ -15,8 +15,8 @@ from backend.app.application.use_cases.get_dashboard import (
 )
 from backend.app.application.use_cases.run_analytics import RunAnalyticsUseCase
 from backend.app.core.config import settings
-from backend.app.core.responses import ApiResponse
 from backend.app.core.rate_limit import limiter
+from backend.app.core.responses import ApiResponse
 
 router = APIRouter(tags=["Analytics"])
 

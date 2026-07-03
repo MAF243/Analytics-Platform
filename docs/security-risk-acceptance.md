@@ -3,7 +3,7 @@
 ## Executive Summary
 A comprehensive security review of the Python dependencies for the Enterprise Analytics Data Cleaning project (v1.0.0) has been conducted. Automated audits via `pip-audit` identified several vulnerabilities originating from upstream standard data science and web framework libraries (e.g., FastAPI, Starlette, Pandas, Scikit-learn, LangChain, Pillow, aiohttp).
 
-Given the application's strict architectural controls—specifically the exclusive processing of `.csv` files, robust content validation, strict rate limiting, internal network isolation via Docker, non-root execution, and strict Content-Security-Policy (CSP)—the practical exploitability of these vulnerabilities is assessed as **Negligible to Low**. 
+Given the application's strict architectural controls—specifically the exclusive processing of `.csv` files, robust content validation, strict rate limiting, internal network isolation via Docker, non-root execution, and strict Content-Security-Policy (CSP)—the practical exploitability of these vulnerabilities is assessed as **Negligible to Low**.
 
 This document formally accepts the remaining transitive vulnerabilities for the v1.0.0 production release and outlines the mitigation strategy.
 

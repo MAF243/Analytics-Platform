@@ -1,15 +1,17 @@
 # Environment Variable Reference
 
-This document catalogs all environment variables used in the Enterprise Analytics Platform. 
+This document catalogs all environment variables used in the Enterprise Analytics Platform.
 **NEVER COMMIT SECRETS**. Use `.env.example` as a template for local development.
 
 ## Frontend (`frontend/.env`)
+
 | Variable | Description | Default | Required |
 | --- | --- | --- | --- |
 | `VITE_API_URL` | The base URL of the FastAPI backend. | `http://localhost:8000/api/v1` | **Yes** |
 | `VITE_SENTRY_DSN` | Sentry DSN for frontend error tracking. | (empty) | No |
 
 ## Backend (`backend/.env`)
+
 | Variable | Description | Default | Required |
 | --- | --- | --- | --- |
 | `PROJECT_NAME` | The name of the API. | `Enterprise Analytics API` | No |

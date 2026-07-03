@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Currently, only the latest major version (`v1.x.x`) is supported with security updates. 
+Currently, only the latest major version (`v1.x.x`) is supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
