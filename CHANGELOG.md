@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/MAF243/Analytics-Platform/compare/v1.0.0...v1.0.1) (2026-07-03)
+
+
+### Bug Fixes
+
+* remove unnecessary lighthouse, documentation, and implementation plan files from git ignore ([0685e1d](https://github.com/MAF243/Analytics-Platform/commit/0685e1d61439f590ef9100fe743f5d1f48c740f9))
+
 # 1.0.0 (2026-07-03)
 
 
