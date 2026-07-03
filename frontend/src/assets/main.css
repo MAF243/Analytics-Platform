@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: #0f172a;
+    --primary-hover: #334155;
+    --primary-foreground: #ffffff;
+
+    --surface: #ffffff;
+    --surface-variant: #f1f5f9;
+
+    --background: #f8fafc;
+    --border: #e2e8f0;
+
+    --text: #0f172a;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --success: #10b981;
+    --info: #3b82f6;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+  }
+
+  .dark {
+    --primary: #f8fafc;
+    --primary-hover: #e2e8f0;
+    --primary-foreground: #020617;
+
+    --surface: #0f172a;
+    --surface-variant: #1e293b;
+
+    --background: #020617;
+    --border: #334155;
+
+    --text: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+
+    --error: #f87171;
+    --warning: #fbbf24;
+    --success: #34d399;
+    --info: #60a5fa;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-text antialiased;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

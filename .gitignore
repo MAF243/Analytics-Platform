@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+ENV/
+env/
+
+# Environments
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build artifacts
+dist/
+build/
+dist-ssr/
+*.egg-info/
+eggs/
+.eggs/
+sdist/
+wheels/
+*.so
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Playwright & Testing
+playwright-report/
+test-results/
+.playwright/
+coverage/
+
+# IDE and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and Temp
+*.log
+logs/
+*.tmp
+*.bak
+*.cache
+
+# Generated/Exports
+openapi*.json
+audit_result.txt
+lighthouse*.html
+lighthouse*.json

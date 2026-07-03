@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    image: enterprise-analytics-backend:latest
+    container_name: analytics-backend
+    volumes:
+      - backend_data:/app/data
+    networks:
+      - analytics-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    environment:
+      - ENV=production
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: docker/frontend.Dockerfile
+    image: enterprise-analytics-frontend:latest
+    container_name: analytics-frontend
+    ports:
+      - "80:80"
+    networks:
+      - analytics-net
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  analytics-net:
+    driver: bridge
+
+volumes:
+  backend_data:

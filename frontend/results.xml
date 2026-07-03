@@ -1,0 +1,286 @@
+<testsuites id="" name="" tests="24" failures="0" skipped="0" errors="0" time="41.174183">
+<testsuite name="app.spec.ts" timestamp="2026-06-30T00:30:04.309Z" hostname="chromium" tests="6" failures="0" skipped="0" time="22.534" errors="0">
+<testcase name="Enterprise Analytics Data Cleaning E2E › Application loads successfully and passes accessibility" classname="app.spec.ts" time="5.44">
+<system-out>
+<![CDATA[Accessibility Violations: 0
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-chromium\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-chromium\video-1.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Upload Validation - Invalid CSV" classname="app.spec.ts" time="3.441">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-chromium\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard loads and renders charts" classname="app.spec.ts" time="3.394">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-chromium\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Theme Switching" classname="app.spec.ts" time="3.311">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-chromium\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Responsive Layout" classname="app.spec.ts" time="3.513">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-chromium\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Offline mode &amp; Recovery" classname="app.spec.ts" time="3.435">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-chromium\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-chromium\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-chromium\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="app.spec.ts" timestamp="2026-06-30T00:30:04.309Z" hostname="firefox" tests="6" failures="0" skipped="0" time="39.644" errors="0">
+<testcase name="Enterprise Analytics Data Cleaning E2E › Application loads successfully and passes accessibility" classname="app.spec.ts" time="9.232">
+<system-out>
+<![CDATA[Accessibility Violations: 0
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-firefox\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-firefox\video-1.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-firefox\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-firefox\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Upload Validation - Invalid CSV" classname="app.spec.ts" time="5.617">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-firefox\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-firefox\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-firefox\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard loads and renders charts" classname="app.spec.ts" time="4.036">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-firefox\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-firefox\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-firefox\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Theme Switching" classname="app.spec.ts" time="4.613">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-firefox\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-firefox\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-firefox\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Responsive Layout" classname="app.spec.ts" time="8.663">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-firefox\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-firefox\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-firefox\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Offline mode &amp; Recovery" classname="app.spec.ts" time="7.483">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-firefox\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-firefox\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-firefox\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="app.spec.ts" timestamp="2026-06-30T00:30:04.309Z" hostname="webkit" tests="6" failures="0" skipped="0" time="34.654" errors="0">
+<testcase name="Enterprise Analytics Data Cleaning E2E › Application loads successfully and passes accessibility" classname="app.spec.ts" time="12.737">
+<system-out>
+<![CDATA[Accessibility Violations: 0
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-webkit\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-webkit\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-webkit\video-1.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-webkit\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Upload Validation - Invalid CSV" classname="app.spec.ts" time="3.012">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-webkit\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-webkit\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-webkit\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard loads and renders charts" classname="app.spec.ts" time="3.643">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-webkit\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-webkit\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-webkit\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Theme Switching" classname="app.spec.ts" time="3.97">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-webkit\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-webkit\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-webkit\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Responsive Layout" classname="app.spec.ts" time="6.315">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-webkit\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-webkit\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-webkit\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Offline mode &amp; Recovery" classname="app.spec.ts" time="4.977">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-webkit\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-webkit\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-webkit\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="app.spec.ts" timestamp="2026-06-30T00:30:04.309Z" hostname="Mobile Chrome" tests="6" failures="0" skipped="0" time="15.844" errors="0">
+<testcase name="Enterprise Analytics Data Cleaning E2E › Application loads successfully and passes accessibility" classname="app.spec.ts" time="3.967">
+<system-out>
+<![CDATA[Accessibility Violations: 0
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-Mobile-Chrome\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-Mobile-Chrome\video-1.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-3c57c-ly-and-passes-accessibility-Mobile-Chrome\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Upload Validation - Invalid CSV" classname="app.spec.ts" time="1.451">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-Mobile-Chrome\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-c7321-ad-Validation---Invalid-CSV-Mobile-Chrome\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard loads and renders charts" classname="app.spec.ts" time="2.007">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-Mobile-Chrome\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-cfe7b-rd-loads-and-renders-charts-Mobile-Chrome\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Theme Switching" classname="app.spec.ts" time="1.324">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-Mobile-Chrome\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-9a95f-E-Dashboard-Theme-Switching-Mobile-Chrome\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Dashboard Responsive Layout" classname="app.spec.ts" time="3.979">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-Mobile-Chrome\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-15505-Dashboard-Responsive-Layout-Mobile-Chrome\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="Enterprise Analytics Data Cleaning E2E › Offline mode &amp; Recovery" classname="app.spec.ts" time="3.116">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-Mobile-Chrome\test-finished-1.png]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-Mobile-Chrome\video.webm]]
+
+[[ATTACHMENT|test-results\app-Enterprise-Analytics-D-d4719-g-E2E-Offline-mode-Recovery-Mobile-Chrome\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

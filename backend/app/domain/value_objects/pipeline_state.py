@@ -1,0 +1,18 @@
+from enum import Enum
+
+
+class PipelineState(str, Enum):
+    """Lifecycle states of the analytics pipeline."""
+
+    UPLOADED = "UPLOADED"
+    VALIDATED = "VALIDATED"
+    PROFILED = "PROFILED"
+    CLEANED = "CLEANED"
+    FEATURE_SELECTED = "FEATURE_SELECTED"
+    SCALED = "SCALED"
+    PCA_COMPLETED = "PCA_COMPLETED"
+    ELBOW_COMPLETED = "ELBOW_COMPLETED"
+    CLUSTERED = "CLUSTERED"
+    SUMMARY_GENERATED = "SUMMARY_GENERATED"
+    DASHBOARD_READY = "DASHBOARD_READY"
+    FAILED = "FAILED"
