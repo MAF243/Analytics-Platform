@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/MAF243/Analytics-Platform/compare/v1.0.1...v1.1.0) (2026-07-03)
+
+
+### Features
+
+* implement Hugging Face deployment workflow and finalize project metadata and ownership documentation ([182e1e4](https://github.com/MAF243/Analytics-Platform/commit/182e1e44c607df7c9e344e776489e5e8e825655b))
+
 # [1.0.1](https://github.com/MAF243/Analytics-Platform/compare/v1.0.0...v1.0.1) (2026-07-03)
 
 ## Bug Fixes
