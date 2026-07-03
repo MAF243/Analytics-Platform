@@ -1,3 +1,4 @@
+from typing import Any
 from fastapi import APIRouter, Depends, File, Request, UploadFile
 from loguru import logger
 
@@ -16,7 +17,7 @@ router = APIRouter(tags=["Dataset"])
 
 
 @router.post("/upload-test")
-async def upload_test(request: Request):
+async def upload_test(request: Request) -> dict[str, Any]:
     logger.info(
         "UPLOAD ROUTER REACHED",
         extra={
@@ -30,7 +31,7 @@ async def upload_test(request: Request):
 
 
 @router.post("/upload-debug")
-async def upload_debug(request: Request):
+async def upload_debug(request: Request) -> dict[str, Any]:
     logger.info(
         "UPLOAD ROUTER REACHED",
         extra={
@@ -53,7 +54,7 @@ async def upload_debug(request: Request):
 
 
 @router.post("/body-test")
-async def body_test(request: Request):
+async def body_test(request: Request) -> dict[str, int]:
     body = await request.body()
     logger.info(len(body))
     logger.info(request.headers.get("content-type"))
@@ -62,13 +63,13 @@ async def body_test(request: Request):
 
 
 @router.post("/multipart-test")
-async def multipart_test(request: Request):
+async def multipart_test(request: Request) -> dict[str, list[str]]:
     form = await request.form()
     logger.info(form.keys())
     return {"keys": list(form.keys())}
 
 
-async def pre_upload_logging(request: Request):
+async def pre_upload_logging(request: Request) -> None:
     logger.info("UPLOAD ROUTER ENTER")
     logger.info(request.headers)
     logger.info(request.headers.get("content-length"))

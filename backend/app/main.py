@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from typing import Any, AsyncGenerator
 
 import sentry_sdk
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from loguru import logger
@@ -58,7 +58,7 @@ def create_app() -> FastAPI:
     @app.exception_handler(RateLimitExceeded)
     async def custom_rate_limit_exceeded_handler(
         request: Request, exc: RateLimitExceeded
-    ):
+    ) -> Response:
         logger.warning(f"SlowAPI Rate limit exceeded for {request.url.path}")
         return _rate_limit_exceeded_handler(request, exc)
 

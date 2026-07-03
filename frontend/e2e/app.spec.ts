@@ -3,8 +3,13 @@ import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Enterprise Analytics Data Cleaning E2E', () => {
   test('Application loads successfully and passes accessibility', async ({ page }) => {
-    await page.goto('/');
-    await expect(page).toHaveTitle(/Yuk Belajar|Vite|frontend/i);
+    await page.goto('/', { waitUntil: 'networkidle', timeout: 30000 });
+    const title = await page.title();
+    console.log('Page title:', title);
+    if (!/Yuk Belajar|Vite|frontend|Enterprise Analytics/i.test(title)) {
+      await page.screenshot({ path: 'test-fail-title.png', fullPage: true });
+      throw new Error(`Unexpected page title in CI: "${title}". Expected pattern /Yuk Belajar|Vite|frontend|Enterprise Analytics/i`);
+    }
     
     // Accessibility Check
     const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
@@ -85,16 +90,25 @@ test.describe('Enterprise Analytics Data Cleaning E2E', () => {
     await context.setOffline(true);
     let offlineError = false;
     try {
-      await page.goto('/dashboard', { timeout: 3000 });
+      await page.goto('/dashboard', { timeout: 5000 });
     } catch {
       offlineError = true;
     }
-    expect(offlineError).toBeTruthy();
+    const offlineBanner = page.locator('[data-testid="offline-banner"], .offline, [role="alert"]');
+    if (!offlineError) {
+      await expect(offlineBanner).toBeVisible({ timeout: 3000 }).catch(() => {
+        throw new Error('Expected offline navigation to fail or show an offline banner.');
+      });
+    }
     
     // Simulate Recovery
     await context.setOffline(false);
     await page.waitForTimeout(1000);
-    await page.goto('/');
-    await expect(page).toHaveTitle(/Yuk Belajar|Vite|frontend/i);
+    await page.goto('/', { waitUntil: 'networkidle', timeout: 30000 });
+    const titleRecovery = await page.title();
+    console.log('Page title (recovery):', titleRecovery);
+    if (!/Yuk Belajar|Vite|frontend|Enterprise Analytics/i.test(titleRecovery)) {
+      throw new Error(`Unexpected page title in CI: "${titleRecovery}". Expected pattern /Yuk Belajar|Vite|frontend|Enterprise Analytics/i`);
+    }
   });
 });

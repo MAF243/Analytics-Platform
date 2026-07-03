@@ -86,9 +86,14 @@ jobs:
     - name: Security Audit (npm audit)
       run: npm audit
       
+    - name: Build Frontend
+      run: npm run build
+
     - name: Playwright E2E Tests
       run: |
         npx playwright install --with-deps
+        npx http-server dist -p 5173 -c-1 > /dev/null 2>&1 &
+        npx wait-on http://127.0.0.1:5173 -t 30000
         npx playwright test
 
   docker-build:
