@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     # Security / CORS
-    cors_origins: list[str] = ["http://localhost:5173"]
+    cors_origins: str | list[str] = ["http://localhost:5173"]
 
     @field_validator("cors_origins", mode="before")
     @classmethod
