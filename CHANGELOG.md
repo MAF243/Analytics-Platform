@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/MAF243/Analytics-Platform/compare/v1.6.0...v1.7.0) (2026-07-03)
+
+
+### Features
+
+* initialize environment configuration and deployment settings for frontend and backend ([a51bdc3](https://github.com/MAF243/Analytics-Platform/commit/a51bdc3a50b20caf6c098a43c21f91fcbef2d77d))
+
 # [1.6.0](https://github.com/MAF243/Analytics-Platform/compare/v1.5.0...v1.6.0) (2026-07-03)
 
 
