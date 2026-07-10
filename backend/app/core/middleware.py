@@ -6,6 +6,12 @@ from fastapi import Request, Response
 from loguru import logger
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from backend.app.application.observability.log_events import (
+    RequestCompletedLog,
+    RequestFailedLog,
+    RequestStartedLog,
+)
+
 
 class RequestIDMiddleware(BaseHTTPMiddleware):
     """Injects a unique request ID into every request."""
@@ -48,32 +54,34 @@ class LoggingMiddleware(BaseHTTPMiddleware):
     ) -> Response:
         request_id = getattr(request.state, "request_id", "unknown")
         correlation_id = getattr(request.state, "correlation_id", "unknown")
-        logger_context = logger.bind(
+
+        start_time = time.perf_counter()
+        request.state.start_time = start_time
+
+        with logger.contextualize(
             request_id=request_id,
             correlation_id=correlation_id,
-            method=request.method,
-            path=request.url.path,
-        )
+            start_time=start_time,
+        ):
+            start_log = RequestStartedLog(method=request.method, path=request.url.path)
+            logger.bind(**start_log.as_dict()).info("LOGGING MIDDLEWARE ENTER")
 
-        logger_context.info("LOGGING MIDDLEWARE ENTER")
-        logger_context.info(request.method)
-        logger_context.info(request.url.path)
-        logger_context.info(request.headers.get("content-type"))
-        logger_context.info(request.headers.get("content-length"))
-        try:
-            response = await call_next(request)
-            logger_context.info("LOGGING MIDDLEWARE EXIT")
+            try:
+                response = await call_next(request)
 
-            process_time = getattr(request.state, "processing_time", 0.0)
-            logger_context.info(
-                "Request completed",
-                status_code=response.status_code,
-                duration=f"{process_time:.4f}s",
-            )
-            return response
-        except Exception as e:
-            logger_context.exception(f"Request failed with unexpected error: {str(e)}")
-            raise
+                process_time = time.perf_counter() - start_time
+                complete_log = RequestCompletedLog(
+                    status_code=response.status_code, duration=f"{process_time:.4f}s"
+                )
+                logger.bind(**complete_log.as_dict()).info("LOGGING MIDDLEWARE EXIT")
+
+                return response
+            except Exception as e:
+                failed_log = RequestFailedLog(error=str(e))
+                logger.bind(**failed_log.as_dict()).exception(
+                    "Request failed with unexpected error"
+                )
+                raise
 
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):

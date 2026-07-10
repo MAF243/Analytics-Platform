@@ -1,36 +1,53 @@
 import csv
 import io
 from abc import ABC, abstractmethod
+from dataclasses import replace
 from typing import BinaryIO
 
+from backend.app.application.dtos.validation_metadata import ValidationMetadata
+from backend.app.application.ports.validation_service import ValidationService
 from backend.app.core.constants import (
     MAX_UPLOAD_SIZE_BYTES,
     MIN_NUMERIC_COLUMNS,
     SUPPORTED_EXTENSIONS,
-    SUPPORTED_MIME_TYPES,
 )
 from backend.app.core.exceptions import ValidationException
-from backend.app.domain.interfaces.validation_service import ValidationService
 
 
 class BaseValidator(ABC):
     @abstractmethod
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         pass
 
 
-class FileTypeValidator(BaseValidator):
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
-        if content_type not in SUPPORTED_MIME_TYPES:
-            raise ValidationException(f"Unsupported MIME type: {content_type}")
-
+class FileExtensionValidator(BaseValidator):
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         ext = filename[filename.rfind(".") :].lower() if "." in filename else ""
         if ext not in SUPPORTED_EXTENSIONS:
             raise ValidationException(f"Unsupported file extension: {ext}")
+        return replace(result, extension=ext, filename=filename)
 
 
 class FileSizeValidator(BaseValidator):
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         file_stream.seek(0, 2)  # Seek to end
         size = file_stream.tell()
         file_stream.seek(0)  # Reset
@@ -42,10 +59,17 @@ class FileSizeValidator(BaseValidator):
             raise ValidationException(
                 f"File size exceeds the {MAX_UPLOAD_SIZE_BYTES / (1024*1024)} MB limit."
             )
+        return replace(result, file_size_bytes=size)
 
 
 class EncodingValidator(BaseValidator):
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         # Simplistic check for valid utf-8 decoding on the first chunk
         chunk = file_stream.read(1024)
         file_stream.seek(0)
@@ -53,10 +77,17 @@ class EncodingValidator(BaseValidator):
             chunk.decode("utf-8")
         except UnicodeDecodeError:
             raise ValidationException("File must be valid UTF-8 encoded.")
+        return replace(result, encoding="utf-8")
 
 
 class CSVStructureValidator(BaseValidator):
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         file_stream.seek(0)
         try:
             text_stream = io.TextIOWrapper(file_stream, encoding="utf-8")
@@ -82,6 +113,19 @@ class CSVStructureValidator(BaseValidator):
             if row_count == 0:
                 raise ValidationException("CSV file contains no data rows.")
 
+            return replace(
+                result,
+                csv_valid=True,
+                rows_detected=row_count,
+                column_count=num_cols,
+                delimiter=(
+                    reader.dialect.delimiter
+                    if hasattr(reader, "dialect")
+                    and hasattr(reader.dialect, "delimiter")
+                    else ","
+                ),
+            )
+
         except csv.Error as e:
             raise ValidationException(f"Malformed CSV syntax: {str(e)}")
         finally:
@@ -90,7 +134,13 @@ class CSVStructureValidator(BaseValidator):
 
 
 class HeaderValidator(BaseValidator):
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         file_stream.seek(0)
         text_stream = io.TextIOWrapper(file_stream, encoding="utf-8")
         reader = csv.reader(text_stream)
@@ -100,7 +150,7 @@ class HeaderValidator(BaseValidator):
         except StopIteration:
             text_stream.detach()
             file_stream.seek(0)
-            return  # Will be caught by CSVStructureValidator
+            return result  # Will be caught by CSVStructureValidator
 
         seen_headers = set()
         for col in header:
@@ -120,10 +170,17 @@ class HeaderValidator(BaseValidator):
 
         text_stream.detach()
         file_stream.seek(0)
+        return replace(result, header_count=len(seen_headers))
 
 
 class NumericColumnValidator(BaseValidator):
-    def validate(self, file_stream: BinaryIO, filename: str, content_type: str) -> None:
+    def validate(
+        self,
+        file_stream: BinaryIO,
+        filename: str,
+        content_type: str,
+        result: ValidationMetadata,
+    ) -> ValidationMetadata:
         file_stream.seek(0)
         text_stream = io.TextIOWrapper(file_stream, encoding="utf-8")
         reader = csv.reader(text_stream)
@@ -134,7 +191,7 @@ class NumericColumnValidator(BaseValidator):
         except StopIteration:
             text_stream.detach()
             file_stream.seek(0)
-            return
+            return result
 
         numeric_count = 0
         for val in first_row:
@@ -156,14 +213,15 @@ class NumericColumnValidator(BaseValidator):
 
         text_stream.detach()
         file_stream.seek(0)
+        return replace(result, numeric_column_count=numeric_count)
 
 
-class CSVValidationService(ValidationService):
-    """Orchestrates specific validators to ensure file integrity."""
+class ValidationPipeline:
+    """Orchestrates the execution of a series of validators."""
 
     def __init__(self) -> None:
-        self.validators = [
-            FileTypeValidator(),
+        self.validators: list[BaseValidator] = [
+            FileExtensionValidator(),
             FileSizeValidator(),
             EncodingValidator(),
             CSVStructureValidator(),
@@ -171,8 +229,22 @@ class CSVValidationService(ValidationService):
             NumericColumnValidator(),
         ]
 
+    def execute(
+        self, file_stream: BinaryIO, filename: str, content_type: str
+    ) -> ValidationMetadata:
+        metadata = ValidationMetadata()
+        for validator in self.validators:
+            metadata = validator.validate(file_stream, filename, content_type, metadata)
+        return metadata
+
+
+class CSVValidationService(ValidationService):
+    """Provides the application port implementation for CSV validation."""
+
+    def __init__(self) -> None:
+        self.pipeline = ValidationPipeline()
+
     def validate_upload(
         self, file_stream: BinaryIO, filename: str, content_type: str
-    ) -> None:
-        for validator in self.validators:
-            validator.validate(file_stream, filename, content_type)
+    ) -> ValidationMetadata:
+        return self.pipeline.execute(file_stream, filename, content_type)
