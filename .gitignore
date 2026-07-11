@@ -66,3 +66,5 @@ lighthouse*.json
 # Documentation and planning
 docs/testing.md
 implementation_plan.md
+
+data/

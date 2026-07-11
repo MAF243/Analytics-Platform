@@ -61,7 +61,7 @@ class AnalysisExecutor(AnalysisProgressReporter):
             dataset_id=dataset_id,
             job_id=job.job_id,
         )
-        logger.bind(**log.as_dict(), job_id=job.job_id).info("Analysis job created")
+        logger.bind(**log.as_dict()).info("Analysis job created")
 
         return job
 
