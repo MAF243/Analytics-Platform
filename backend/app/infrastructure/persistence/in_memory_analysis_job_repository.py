@@ -15,7 +15,7 @@ class InMemoryAnalysisJobRepository(AnalysisJobRepository):
         self.cleanup_expired()
         self._store[job.job_id] = job
 
-    def get_by_job_id(self, job_id: str) -> Optional[AnalysisJob]:
+    def find(self, job_id: str) -> Optional[AnalysisJob]:
         self.cleanup_expired()
         job = self._store.get(job_id)
         if job and JobLifecyclePolicy.is_expired(job):
@@ -23,26 +23,46 @@ class InMemoryAnalysisJobRepository(AnalysisJobRepository):
             return None
         return job
 
-    def get_latest_for_dataset(self, dataset_id: str) -> Optional[AnalysisJob]:
+    def find_active_job(self, dataset_id: str) -> Optional[AnalysisJob]:
+        active_statuses = (AnalysisJobStatus.QUEUED, AnalysisJobStatus.RUNNING)
+        jobs = self.find_jobs(dataset_id, limit=1)
+        if jobs and jobs[0].status in active_statuses:
+            return jobs[0]
+        return None
+
+    def find_latest_job(self, dataset_id: str) -> Optional[AnalysisJob]:
+        jobs = self.find_jobs(dataset_id, limit=1)
+        return jobs[0] if jobs else None
+
+    def find_jobs(
+        self,
+        dataset_id: str,
+        status: Optional[AnalysisJobStatus] = None,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        newest_first: bool = True,
+    ) -> list[AnalysisJob]:
         self.cleanup_expired()
 
-        # Filter jobs for this dataset
-        dataset_jobs = [
-            job for job in self._store.values() if job.dataset_id == dataset_id
-        ]
+        # Filter
+        jobs = [job for job in self._store.values() if job.dataset_id == dataset_id]
 
-        if not dataset_jobs:
-            return None
+        if status:
+            jobs = [job for job in jobs if job.status == status]
 
-        # Sort by updated_at descending (latest first)
-        dataset_jobs.sort(
+        # Sort
+        jobs.sort(
             key=lambda j: j.updated_at.timestamp() if j.updated_at else 0.0,
-            reverse=True,
+            reverse=newest_first,
         )
-        return dataset_jobs[0]
+
+        # Pagination
+        start = offset or 0
+        end = start + limit if limit else len(jobs)
+        return jobs[start:end]
 
     def cancel(self, job_id: str) -> None:
-        job = self.get_by_job_id(job_id)
+        job = self.find(job_id)
         if job and job.status in (AnalysisJobStatus.QUEUED, AnalysisJobStatus.RUNNING):
             job.status = AnalysisJobStatus.CANCELLED
             job.is_cancelled = True

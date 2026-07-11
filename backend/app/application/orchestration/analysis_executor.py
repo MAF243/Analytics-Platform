@@ -80,7 +80,7 @@ class AnalysisExecutor(AnalysisProgressReporter):
             start_time=self._start_time,
             job_id=self._current_job_id,
         ):
-            job = self.status_repository.get_by_job_id(job_id)
+            job = self.status_repository.find(job_id)
             if not job:
                 return
 
@@ -103,7 +103,7 @@ class AnalysisExecutor(AnalysisProgressReporter):
                 self.use_case.execute(dataset_id, reporter=self)
 
                 # Fetch latest to ensure we don't overwrite if cancelled concurrently
-                job = self.status_repository.get_by_job_id(job_id)
+                job = self.status_repository.find(job_id)
                 if not job or job.is_cancelled:
                     raise JobCancelledException("Job was cancelled during execution")
 
@@ -126,7 +126,7 @@ class AnalysisExecutor(AnalysisProgressReporter):
 
             except JobCancelledException as e:
                 # Refresh job from DB to mark it
-                job = self.status_repository.get_by_job_id(job_id)
+                job = self.status_repository.find(job_id)
                 if job:
                     job.status = AnalysisJobStatus.CANCELLED
                     job.finished_at = datetime.utcnow()
@@ -144,7 +144,7 @@ class AnalysisExecutor(AnalysisProgressReporter):
 
             except Exception as e:
                 # Mark failed
-                job = self.status_repository.get_by_job_id(job_id)
+                job = self.status_repository.find(job_id)
                 if job:
                     job.status = AnalysisJobStatus.FAILED
                     job.error_message = str(e)
@@ -164,7 +164,7 @@ class AnalysisExecutor(AnalysisProgressReporter):
                     )
 
     def _check_cancellation(self) -> AnalysisJob:
-        job = self.status_repository.get_by_job_id(self._current_job_id)  # type: ignore
+        job = self.status_repository.find(self._current_job_id)  # type: ignore
         if not job:
             raise ApplicationException("Job not found")
         if job.is_cancelled:

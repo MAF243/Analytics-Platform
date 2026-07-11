@@ -64,7 +64,7 @@ async def get_analysis_status(
     job_repo: AnalysisJobRepository = Depends(get_analysis_job_repository),
 ) -> ApiResponse[Dict[str, Any]]:
     """Retrieves the current execution status of the analytics pipeline."""
-    job = job_repo.get_latest_for_dataset(dataset_id)
+    job = job_repo.find_latest_job(dataset_id)
     if not job:
         raise HTTPException(
             status_code=404, detail="Analysis status not found for dataset"

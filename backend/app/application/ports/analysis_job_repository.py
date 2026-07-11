@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import List, Optional
 
-from backend.app.domain.entities.analysis_job import AnalysisJob
+from backend.app.domain.entities.analysis_job import AnalysisJob, AnalysisJobStatus
 
 
 class AnalysisJobRepository(ABC):
@@ -13,13 +13,30 @@ class AnalysisJobRepository(ABC):
         pass
 
     @abstractmethod
-    def get_by_job_id(self, job_id: str) -> Optional[AnalysisJob]:
+    def find(self, job_id: str) -> Optional[AnalysisJob]:
         """Retrieves an analysis job by its specific ID."""
         pass
 
     @abstractmethod
-    def get_latest_for_dataset(self, dataset_id: str) -> Optional[AnalysisJob]:
-        """Retrieves the most recently created or active job for a dataset."""
+    def find_active_job(self, dataset_id: str) -> Optional[AnalysisJob]:
+        """Retrieves the currently running or queued job for a dataset, if any."""
+        pass
+
+    @abstractmethod
+    def find_latest_job(self, dataset_id: str) -> Optional[AnalysisJob]:
+        """Retrieves the most recently updated job for a dataset."""
+        pass
+
+    @abstractmethod
+    def find_jobs(
+        self,
+        dataset_id: str,
+        status: Optional[AnalysisJobStatus] = None,
+        limit: Optional[int] = None,
+        offset: Optional[int] = None,
+        newest_first: bool = True,
+    ) -> List[AnalysisJob]:
+        """Retrieves a list of jobs matching the query criteria."""
         pass
 
     @abstractmethod
