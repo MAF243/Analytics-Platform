@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { AnalysisFacade, type AnalysisPollingStrategy } from '../../facades/AnalysisFacade';
+import { AnalysisFacade, type AnalysisExecutionStrategy } from '../../facades/AnalysisFacade';
 import { useToast } from '../../composables/useToast';
 import Container from '../../components/layout/Container.vue';
 import Card from '../../components/ui/Card.vue';
@@ -18,7 +18,7 @@ const statusMessage = ref('Initializing analysis pipeline...');
 const progress = ref(0);
 const hasError = ref(false);
 
-let poller: AnalysisPollingStrategy | null = null;
+let executor: AnalysisExecutionStrategy | null = null;
 
 onMounted(() => {
   if (!datasetId) {
@@ -27,7 +27,7 @@ onMounted(() => {
     return;
   }
 
-  poller = AnalysisFacade.createPoller(datasetId, {
+  executor = AnalysisFacade.startAnalysis(datasetId, {
     onStatusChange: (status) => {
       progress.value = status.progress || progress.value;
 
@@ -57,17 +57,17 @@ onMounted(() => {
     }
   });
 
-  poller.start();
+  executor.start();
 });
 
 onUnmounted(() => {
-  if (poller) {
-    poller.stop();
+  if (executor) {
+    executor.stop();
   }
 });
 
 const handleCancel = () => {
-  if (poller) poller.stop();
+  if (executor) executor.stop();
   router.push('/');
 };
 
@@ -75,7 +75,7 @@ const handleRetry = () => {
   hasError.value = false;
   statusMessage.value = 'Retrying analysis...';
   progress.value = 0;
-  if (poller) poller.start();
+  if (executor) executor.start();
 };
 </script>
 

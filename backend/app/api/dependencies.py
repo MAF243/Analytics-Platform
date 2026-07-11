@@ -1,5 +1,9 @@
 from fastapi import Request
 
+from backend.app.application.orchestration.analysis_executor import AnalysisExecutor
+from backend.app.application.ports.analysis_job_repository import (
+    AnalysisJobRepository,
+)
 from backend.app.application.use_cases.get_dashboard import (
     GetAnalyticsArtifactUseCase,
     GetDashboardUseCase,
@@ -20,12 +24,16 @@ from backend.app.infrastructure.ml.summaries import (
     PandasCategorySummaryService,
     PandasSummaryService,
 )
+from backend.app.infrastructure.persistence.in_memory_analysis_job_repository import (
+    InMemoryAnalysisJobRepository,
+)
 from backend.app.infrastructure.storage.local_storage import LocalStorageRepositoryImpl
 from backend.app.infrastructure.validation.validators import CSVValidationService
 
 # Singleton instances for MVP
 storage_repo = LocalStorageRepositoryImpl()
 validation_service = CSVValidationService()
+analysis_job_repo = InMemoryAnalysisJobRepository()
 
 # Singleton ML Services
 profiling_service = PandasProfilingService()
@@ -70,6 +78,17 @@ def get_run_analytics_use_case() -> RunAnalyticsUseCase:
 
 def get_dashboard_use_case() -> GetDashboardUseCase:
     return GetDashboardUseCase(dataset_repo=storage_repo, metadata_repo=storage_repo)
+
+
+def get_analysis_job_repository() -> AnalysisJobRepository:
+    return analysis_job_repo
+
+
+def get_analysis_executor() -> AnalysisExecutor:
+    return AnalysisExecutor(
+        use_case=get_run_analytics_use_case(),
+        status_repository=analysis_job_repo,
+    )
 
 
 def get_analytics_artifact_use_case() -> GetAnalyticsArtifactUseCase:

@@ -1,11 +1,15 @@
 import io
 from datetime import datetime
-from typing import Any, Dict, cast
+from typing import Any, Dict, Optional, cast
 
 import pandas as pd
 
+from backend.app.application.ports.analysis_progress_reporter import (
+    AnalysisProgressReporter,
+)
 from backend.app.core.exceptions import ApplicationException
 from backend.app.core.serialization import JsonSerializer
+from backend.app.domain.entities.analysis_job import AnalysisStage
 from backend.app.domain.entities.analysis_result import AnalyticsContext
 from backend.app.domain.interfaces.dataset_repository import DatasetRepository
 from backend.app.domain.interfaces.metadata_repository import MetadataRepository
@@ -58,7 +62,18 @@ class RunAnalyticsUseCase:
         self.category_summary_service = category_summary_service
         self.dashboard_builder = dashboard_builder
 
-    def execute(self, dataset_id_str: str) -> Dict[str, Any]:
+    def execute(
+        self, dataset_id_str: str, reporter: Optional[AnalysisProgressReporter] = None
+    ) -> Dict[str, Any]:
+
+        def _report_started(stage: AnalysisStage) -> None:
+            if reporter:
+                reporter.report_stage_started(stage)
+
+        def _report_completed(stage: AnalysisStage) -> None:
+            if reporter:
+                reporter.report_stage_completed(stage)
+
         dataset_id = DatasetId(dataset_id_str)
         dataset = self.dataset_repo.get_by_id(dataset_id)
         if not dataset:
@@ -76,9 +91,12 @@ class RunAnalyticsUseCase:
 
         # Pipeline Execution
         try:
+            _report_started(AnalysisStage.PROFILING)
             context = self.profiling_service.process(context)
             self._save_artifact(context, "profiling.json", context.profiling_result)
+            _report_completed(AnalysisStage.PROFILING)
 
+            _report_started(AnalysisStage.CLEANING)
             context = self.cleaning_service.process(context)
             self._save_artifact(context, "cleaning.json", context.cleaning_report)
 
@@ -91,24 +109,32 @@ class RunAnalyticsUseCase:
                 self.storage_repo.save_result_csv(
                     dataset_id, "cleaned.csv", bytes_buffer
                 )
+            _report_completed(AnalysisStage.CLEANING)
 
+            _report_started(AnalysisStage.FEATURE_ENGINEERING)
             context = self.feature_selection_service.process(context)
             self._save_artifact(
                 context,
                 "feature_selection.json",
                 {"features": context.selected_features},
             )
+            _report_completed(AnalysisStage.FEATURE_ENGINEERING)
 
+            _report_started(AnalysisStage.SCALING)
             context = self.scaling_service.process(context)
             self._save_artifact(
                 context,
                 "scaling.json",
                 {"scaler": context.processing_metadata.get("scaler")},
             )
+            _report_completed(AnalysisStage.SCALING)
 
+            _report_started(AnalysisStage.PCA)
             context = self.pca_service.process(context)
             self._save_artifact(context, "pca.json", context.pca_result)
+            _report_completed(AnalysisStage.PCA)
 
+            _report_started(AnalysisStage.ELBOW)
             context = self.elbow_service.process(context)
             self._save_artifact(
                 context,
@@ -118,12 +144,16 @@ class RunAnalyticsUseCase:
                     "curve": context.processing_metadata.get("elbow_curve"),
                 },
             )
+            _report_completed(AnalysisStage.ELBOW)
 
+            _report_started(AnalysisStage.CLUSTERING)
             context = self.clustering_service.process(context)
             self._save_artifact(
                 context, "clustering.json", {"centroids": context.centroids}
             )
+            _report_completed(AnalysisStage.CLUSTERING)
 
+            _report_started(AnalysisStage.SUMMARY)
             context = self.summary_service.process(context)
             self._save_artifact(context, "summary.json", context.summary)
 
@@ -131,6 +161,7 @@ class RunAnalyticsUseCase:
             self._save_artifact(
                 context, "category_summary.json", context.category_summary
             )
+            _report_completed(AnalysisStage.SUMMARY)
 
             # Save clustered CSV
             if context.cleaned_dataset and context.cluster_labels:
@@ -147,10 +178,12 @@ class RunAnalyticsUseCase:
             context.processing_metadata["finished_at"] = datetime.utcnow().isoformat()
 
             # Build Dashboard DTO and save processing metadata/manifest
+            _report_started(AnalysisStage.DASHBOARD)
             self._save_artifact(
                 context, "processing_metadata.json", context.processing_metadata
             )
             context = self.dashboard_builder.build(context)
+            _report_completed(AnalysisStage.DASHBOARD)
 
         except Exception as e:
             # We would normally transition state to FAILED and save it,

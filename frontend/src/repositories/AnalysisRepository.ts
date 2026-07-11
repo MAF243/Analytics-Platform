@@ -11,10 +11,4 @@ export class AnalysisRepository extends BaseRepository {
       this.post<void>(API_ROUTES.ANALYSIS(datasetId), undefined, options)
     );
   }
-
-  async getStatus(datasetId: string, options?: { signal?: AbortSignal }): Promise<AnalysisStatusDTO> {
-    return this.circuitBreaker.execute(() => 
-      this.get<AnalysisStatusDTO>(API_ROUTES.ANALYSIS(datasetId), options)
-    );
-  }
 }
