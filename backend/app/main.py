@@ -15,7 +15,8 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from backend.app.api.routers import analytics, health, upload
+from backend.app.api.routers import analytics, health, upload, version
+
 from backend.app.core.config import settings
 from backend.app.core.exceptions import ApplicationException, ValidationException
 from backend.app.core.logging import setup_logging
@@ -56,6 +57,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logging.getLogger("uvicorn.error").propagate = False
 
     logger.info("===== ASGI STARTUP =====")
+
+    from backend.app.core.build_info import get_build_info
+    build_info = get_build_info()
+    logger.bind(**build_info.model_dump()).info("Application Build")
 
     sentry_dsn = os.environ.get("SENTRY_DSN")
     if sentry_dsn:
@@ -106,6 +111,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router, prefix=settings.api_v1_prefix)
     app.include_router(upload.router, prefix=settings.api_v1_prefix)
     app.include_router(analytics.router, prefix=settings.api_v1_prefix)
+    app.include_router(version.router, prefix=settings.api_v1_prefix)
 
     @app.get(f"{settings.api_v1_prefix}/debug/ping")
     async def debug_ping(request: Request) -> dict[str, Any]:

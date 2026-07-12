@@ -102,6 +102,30 @@ jobs:
 
           echo "::endgroup::"
 
+      - name: Generate Build Fingerprint
+        run: |
+          set -euo pipefail
+
+          echo "::group::Generating build_info.json"
+
+          cat <<EOF > "$DEPLOY_DIR/backend/app/build_info.json"
+          {
+            "git_commit": "${GITHUB_SHA}",
+            "git_branch": "${GITHUB_REF_NAME}",
+            "build_time": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "github_run_id": "${GITHUB_RUN_ID}",
+            "github_run_number": "${GITHUB_RUN_NUMBER}",
+            "github_repository": "${GITHUB_REPOSITORY}",
+            "docker_image": "analytics-platform:latest",
+            "application_version": "1.0.0"
+          }
+          EOF
+
+          echo "Generated build_info.json:"
+          cat "$DEPLOY_DIR/backend/app/build_info.json"
+
+          echo "::endgroup::"
+
       - name: Generate Hugging Face README
         run: |
           set -euo pipefail

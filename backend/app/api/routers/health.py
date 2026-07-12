@@ -64,23 +64,3 @@ async def readiness_check(
     )
 
 
-@router.get("/version", response_model=ApiResponse[Dict[str, Any]])
-async def version_check(
-    request: Request,
-    request_id: str = Depends(get_request_id),
-    processing_time: float = Depends(get_processing_time),
-) -> ApiResponse[Dict[str, Any]]:
-    """Returns the current API version and app name."""
-    return ApiResponse(
-        success=True,
-        message="Version retrieved successfully",
-        data={
-            "app_name": settings.app_name,
-            "version": settings.version,
-            "env": settings.env,
-        },
-        request_id=request_id,
-        processing_time=processing_time,
-        version=settings.version,
-        status=200,
-    )
