@@ -22,7 +22,7 @@ describe('AnalysisPollingStrategy', () => {
     const onComplete = vi.fn();
     const onError = vi.fn();
 
-    const poller = AnalysisFacade.createPoller('123', {
+    const poller = AnalysisFacade.startAnalysis('123', {
       onStatusChange, onComplete, onError
     });
 

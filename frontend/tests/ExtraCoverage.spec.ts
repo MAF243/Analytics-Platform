@@ -26,7 +26,7 @@ describe('BaseRepository Catch Blocks', () => {
 describe('AnalysisFacade Edge Cases', () => {
   it('retries on 409', async () => {
     const cb = { onStatusChange: vi.fn(), onComplete: vi.fn(), onError: vi.fn() };
-    const poller = AnalysisFacade.createPoller('123', cb);
+    const poller = AnalysisFacade.startAnalysis('123', cb);
 
     vi.spyOn(container.analysisRepository, 'startAnalysis').mockRejectedValue({ statusCode: 409 });
     vi.spyOn(container.analysisRepository, 'getStatus').mockResolvedValue({ status: 'completed' } as any);
@@ -38,7 +38,7 @@ describe('AnalysisFacade Edge Cases', () => {
 
   it('ignores CanceledError', async () => {
     const cb = { onStatusChange: vi.fn(), onComplete: vi.fn(), onError: vi.fn() };
-    const poller = AnalysisFacade.createPoller('123', cb);
+    const poller = AnalysisFacade.startAnalysis('123', cb);
 
     vi.spyOn(container.analysisRepository, 'startAnalysis').mockResolvedValue();
     vi.spyOn(container.analysisRepository, 'getStatus').mockRejectedValue({ name: 'CanceledError' });

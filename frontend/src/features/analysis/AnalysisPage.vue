@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { AnalysisFacade, type AnalysisExecutionStrategy } from '../../facades/AnalysisFacade';
+import { AnalysisFacade, type AnalysisPollingStrategy } from '../../facades/AnalysisFacade';
 import { useToast } from '../../composables/useToast';
 import Container from '../../components/layout/Container.vue';
 import Card from '../../components/ui/Card.vue';
@@ -18,7 +18,7 @@ const statusMessage = ref('Initializing analysis pipeline...');
 const progress = ref(0);
 const hasError = ref(false);
 
-let executor: AnalysisExecutionStrategy | null = null;
+let executor: AnalysisPollingStrategy | null = null;
 
 onMounted(() => {
   if (!datasetId) {
@@ -35,12 +35,20 @@ onMounted(() => {
         case 'queued':
           statusMessage.value = 'Dataset queued for processing...';
           break;
-        case 'processing':
-          statusMessage.value = status.message || 'Cleaning and profiling data...';
+        case 'running':
+          statusMessage.value = status.message || (status.current_step ? `Executing step: ${status.current_step}...` : 'Analyzing data...');
           break;
         case 'completed':
           statusMessage.value = 'Analysis complete!';
           progress.value = 100;
+          break;
+        case 'failed':
+          hasError.value = true;
+          statusMessage.value = status.error_message || status.message || 'Analysis failed.';
+          break;
+        case 'cancelled':
+          hasError.value = true;
+          statusMessage.value = 'Analysis was cancelled.';
           break;
       }
     },
